@@ -17,7 +17,7 @@
     
     public static func create(strength: Strength = .normal, language: WordList = .english) throws -> String {
         let byteCount = strength.rawValue / 8
-        let bytes = try Data.randomBytes(length: byteCount)
+        let bytes = try Data(URandom().bytes(count: byteCount))
         return create(entropy: bytes, language: language)
     }
     
@@ -63,12 +63,6 @@
     }
     return Data(output)
   }
-  extension Data {
-    static func randomBytes(length: Int) throws -> Data {
-        return try Data(URandom().bytes(count: length))
-    }
-  }
-  
   extension String {
     func dropString(_ from: Int, length: Int) -> String {
         if from < 0 || length + from > self.count { return "" }

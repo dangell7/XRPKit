@@ -257,5 +257,23 @@ public class XRPSeedWallet: XRPWallet {
             return false
         }
     }
-
+    public static func decode(seed: String) throws -> [UInt8]? {
+        do {
+            if let data = try XRPSeedWallet.decodeSeed(seed: seed) {
+                return data
+            }
+            return nil
+        } catch {
+            return nil
+        }
+    }
+    
+    public static func encode(bytes: [UInt8]) throws -> String? {
+        do {
+            let entropy = Entropy(bytes: bytes)
+            return try XRPSeedWallet.encodeSeed(entropy: entropy, type: .secp256k1)
+        } catch {
+            return nil
+        }
+    }
 }

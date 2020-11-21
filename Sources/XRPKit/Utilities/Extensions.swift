@@ -52,14 +52,6 @@ enum Bit: Int {
     case zero, one
 }
 
-//extension Data {
-//    var bytes: [Byte] {
-//        var byteArray = [UInt8](repeating: 0, count: self.count)
-//        self.copyBytes(to: &byteArray, count: self.count)
-//        return byteArray
-//    }
-//}
-
 extension Byte {
     var bits: [Bit] {
         let bitsOfAbyte = 8
@@ -98,6 +90,14 @@ extension String {
         guard data.count > 0 else { return nil }
         
         return data
+    }
+    
+    func stripHexPrefix() -> String {
+        if self.hasPrefix("0x") {
+            let indexStart = self.index(self.startIndex, offsetBy: 2)
+            return String(self[indexStart...])
+        }
+        return self
     }
     
 }

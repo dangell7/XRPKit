@@ -33,6 +33,60 @@ final class XRPKitTests: XCTestCase {
         ("testBip44", testBip44),
     ]
     
+    func testKeystoreGenerateRandom() {
+        do {
+            let firstKeystore = try! RippleKeystoreV3(password: "xrp3swift")
+            let firstKeyData = try! JSONEncoder().encode(firstKeystore!.keystoreParams)
+            let lastKeyData = try JSONDecoder().decode(
+                RippleKeystoreParamsV3.self,
+                from: firstKeyData
+            )
+            let lastKeystore = RippleKeystoreV3(lastKeyData)
+            let firstAddress = firstKeystore?.getAddress()
+            let lastAddress = lastKeystore?.getAddress()
+            XCTAssert(firstAddress == lastAddress)
+        } catch {
+            XCTFail("Could not generate keystore")
+        }
+    }
+    
+    func testKeystoreGenerateFromSeed() {
+        do {
+            
+            let wallet = XRPSeedWallet()
+            guard let firstSeed = wallet.seed.data(using: .utf8) else { return }
+            
+            let firstKeystore = try! RippleKeystoreV3(privateKey: firstSeed, password: "xrp3swift")
+            let firstKeyData = try! JSONEncoder().encode(firstKeystore!.keystoreParams)
+            let firstAddress = firstKeystore?.getAddress()
+            
+            let lastKeyData = try JSONDecoder().decode(
+                RippleKeystoreParamsV3.self,
+                from: firstKeyData
+            )
+            let lastKeystore = RippleKeystoreV3(lastKeyData)
+            guard let lastAddress = lastKeystore?.getAddress() else { return }
+            
+            let lastSeed = try lastKeystore?.UNSAFE_getPrivateKeyData(password: "xrp3swift", account: lastAddress)
+            
+            XCTAssert(firstAddress == lastAddress)
+            XCTAssert(firstSeed == lastSeed)
+        } catch {
+            XCTFail("Could not generate keystore")
+        }
+    }
+    
+    func testKeystorePK() {
+        do {
+            let firstKeystore = try! RippleKeystoreV3(password: "xrp3swift")
+            guard let address = firstKeystore?.addresses?.first else { return }
+            let firstPKData = try firstKeystore?.UNSAFE_getPrivateKeyData(password: "xrp3swift", account: address)
+            XCTAssert(firstPKData != nil)
+        } catch {
+            XCTFail("Could not fetch keystore PK")
+        }
+    }
+    
     func testBip44() {
         let mnemonic = "jar deer fox object wrap flush address birth immune plug spell solve reunion head mobile"
         let seed = Bip39Mnemonic.createSeed(mnemonic: mnemonic)
