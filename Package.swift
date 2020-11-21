@@ -21,12 +21,16 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/Boilertalk/secp256k1.swift.git", from: "0.1.4"),
-        .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", .upToNextMinor(from: "1.3.0")),
-        .package(url: "https://github.com/Boilertalk/BigInt.swift.git", from: "1.0.0"),
-        .package(url: "https://github.com/Flight-School/AnyCodable.git", from: "0.2.3"),
-//        .package(url: "https://github.com/apple/swift-nio.git", from: "1.0.0"),
-        .package(url: "https://github.com/apple/swift-nio.git", from: "2.0.0"),
-        .package(url: "https://github.com/vapor/websocket-kit.git", from: "2.0.0-beta.2.3"),
+//        .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", .upToNextMinor(from: "1.3.0")),
+        .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", .exact("1.0.0")),
+//        .package(url: "https://github.com/Boilertalk/BigInt.swift.git", from: "1.0.0"),
+        .package(url: "https://github.com/attaswift/BigInt.git", from: "5.0.0"),
+//        .package(url: "https://github.com/Flight-School/AnyCodable.git", from: "0.2.3"),
+        .package(url: "https://github.com/Flight-School/AnyCodable.git", from: "0.4.0"),
+//        .package(url: "https://github.com/apple/swift-nio.git", from: "2.0.0"),
+        .package(url: "https://github.com/apple/swift-nio.git", from: "2.24.0"),
+//        .package(url: "https://github.com/vapor/websocket-kit.git", from: "2.0.0-beta.2.3"),
+        .package(url: "https://github.com/vapor/websocket-kit.git", from: "2.1.2"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
