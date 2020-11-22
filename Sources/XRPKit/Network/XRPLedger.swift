@@ -24,7 +24,7 @@ public struct XRPLedger {
     #endif
     
     // JSON-RPC
-    private static var url: URL = .xrpl_rpc_Testnet
+    private static var url: URL = .xrpl_rpc_MainNetS1
     
     private init() {
         
