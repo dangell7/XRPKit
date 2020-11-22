@@ -76,7 +76,7 @@ public struct RippleKeystoreParamsV3: Decodable, Encodable {
 }
 
 
-class RippleKeystoreV3: AbstractRippleKeystore {
+public class RippleKeystoreV3: AbstractRippleKeystore {
     // Class
     public func getAddress() -> String? {
         return self.address
