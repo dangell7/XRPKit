@@ -42,8 +42,8 @@ Pod::Spec.new do |s|
   s.dependency 'secp256k1.swift', '~> 0.1.4'
   s.dependency 'CryptoSwift', '~> 1.0.0'
   s.dependency 'BigInt', '~> 5.0.0'
-  s.dependency 'AnyCodable-FlightSchool', '~> 0.4.0'
-  s.dependency 'SwiftNIO', '~> 2.24.0'
+  s.dependency 'AnyCodable-FlightSchool'
+  s.dependency 'SwiftNIO'
   
   s.static_framework = true
 
