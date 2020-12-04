@@ -55,5 +55,15 @@ public struct XRPAmount {
         let leadingZeros: [Character] = Array(repeating: "0", count: 6 - String(drops).count)
         return formattedNumber + "." + String(leadingZeros) + String(drops)
     }
+    
+    public func toDrops() -> Int {
+        return self.drops
+    }
+    
+    public func toXrp() -> Double {
+        let drops = self.drops%1000000
+        let xrp = self.drops/1000000
+        return Double("\(xrp).\(drops)") ?? 0.0
+    }
 
 }
