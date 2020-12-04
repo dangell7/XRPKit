@@ -125,8 +125,9 @@ final class XRPKitTests: XCTestCase {
         let signer1 = try! XRPSeedWallet(seed: "shiZka2bSHQKw4CCcZNPFvvA2iAjR")
         let signer2 = try! XRPSeedWallet(seed: "snqFfd21bfALXF1PDj1ymdQcr3Vhu")
         let signer3 = try! XRPSeedWallet(seed: "sEdVWZmeUDgQdMEFKTK9kYVX71FKB7o")
-        _ = try! XRPAccountSet(wallet: wallet, clear: .asfDisableMaster)
-            .autofill()
+        let set = try! XRPAccountSet(wallet: wallet, clear: .asfDisableMaster)
+        set.ledger.url = .xrpl_rpc_Testnet
+        set.autofill()
             .map({ (tx) in
                 let _tx = try! tx
                 .addMultiSignSignature(wallet: signer3)
@@ -145,8 +146,9 @@ final class XRPKitTests: XCTestCase {
     func testDisableMaster() {
         let exp = expectation(description: "Loading stories")
         let wallet = try! XRPSeedWallet(seed: "ssJip5pqECDQuG5tdSehaKicmkN4d")
-        XRPAccountSet(wallet: wallet, set: .asfDisableMaster)
-            .send()
+        let set = XRPAccountSet(wallet: wallet, set: .asfDisableMaster)
+        set.ledger.url = .xrpl_rpc_Testnet
+        set.send()
             .map { (dict) in
             print(dict)
             exp.fulfill()
@@ -175,7 +177,9 @@ final class XRPKitTests: XCTestCase {
             return XRPSignerEntry(Account: wallet.address, SignerWeight: 1)
         }
         
-        _ = XRPSignerListSet(wallet: wallet, signerQuorum: 3, signerEntries: signers).send().map { (dict) in
+        let set = XRPSignerListSet(wallet: wallet, signerQuorum: 3, signerEntries: signers)
+        set.ledger.url = .xrpl_rpc_Testnet
+        set.send().map { (dict) in
             print(dict)
             exp.fulfill()
         }
@@ -556,7 +560,9 @@ final class XRPKitTests: XCTestCase {
         print(wallet.publicKey)
         let amount = try! XRPAmount(drops: 1000000)
         let address = try! XRPAddress(rAddress: "rUQyLm1pnvFPcYgAFFVu7MvBgEYqWEfrjp", tag: 43)
-        _ = XRPPayment(from: wallet, to: address, amount: amount, sourceTag: 67).send().map({ (dict) in
+        let payment = XRPPayment(from: wallet, to: address, amount: amount, sourceTag: 67)
+        payment.ledger.url = .xrpl_rpc_Testnet
+        payment.send().map({ (dict) in
             print(dict)
             exp.fulfill()
         })
@@ -781,7 +787,9 @@ final class XRPKitTests: XCTestCase {
         let wallet = try! XRPSeedWallet(seed: "ssA9fFYomuCurjdHQgxdLJjz1nhNn")
         let amount = try! XRPAmount(drops: 500000000)
         let address = try! XRPAddress(rAddress: ED_wallet.address)
-        let _ = XRPPayment(from: wallet, to: address, amount: amount).send().map { (result) in
+        let payment = XRPPayment(from: wallet, to: address, amount: amount)
+        payment.ledger.url = .xrpl_rpc_Testnet
+        payment.send().map { (result) in
             print(result)
             exp.fulfill()
         }
@@ -862,7 +870,9 @@ final class XRPKitTests: XCTestCase {
         let amount = try! XRPAmount(drops: 100000000)
         let address = try! XRPAddress(rAddress: "rPdCDje24q4EckPNMQ2fmUAMDoGCCu3eGK")
         
-        _ = XRPPayment(from: wallet, to: address, amount: amount).send().map { (result) in
+        let payment = XRPPayment(from: wallet, to: address, amount: amount)
+        payment.ledger.url = .xrpl_rpc_Testnet
+        payment.send().map { (result) in
             print(result)
         }
         
@@ -884,6 +894,8 @@ final class XRPKitTests: XCTestCase {
         
         // create the transaction (offline)
         let transaction = XRPRawTransaction(fields: fields)
+        
+        transaction.ledger.url = .xrpl_rpc_Testnet
         
         // sign the transaction (offline)
         let signedTransaction = try! transaction.sign(wallet: wallet)

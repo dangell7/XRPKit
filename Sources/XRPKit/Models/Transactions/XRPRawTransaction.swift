@@ -15,6 +15,7 @@ let HASH_TX_MULTISIGN: [UInt8] = [0x53,0x4D,0x54,0x00]
 public class XRPRawTransaction {
     
     public internal(set) var fields: [String: Any] = [:]
+    public var ledger: XRPLedger = XRPLedger()
     
     public init(fields: [String:Any]) {
         self.fields = enforceJSONTypes(fields: fields)
@@ -96,7 +97,7 @@ public class XRPRawTransaction {
     public func submit() -> EventLoopFuture<NSDictionary> {
         let promise = eventGroup.next().makePromise(of: NSDictionary.self)
         let tx = Serializer().serializeTx(tx: self.fields, forSigning: false).toHexString().uppercased()
-        _ = XRPLedger().submit(txBlob: tx).map { (tx) in
+        _ = ledger.submit(txBlob: tx).map { (tx) in
             promise.succeed(tx)
         }.recover { (error) in
             promise.fail(error)

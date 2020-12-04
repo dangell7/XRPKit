@@ -24,7 +24,7 @@ public class XRPLedger: NSObject {
     #endif
     
     // JSON-RPC
-    public var url: URL = .xrpl_rpc_Testnet
+    public var url: URL = .xrpl_rpc_MainNetS1
     
     required public convenience override init() {
         self.init(endpoint: .xrpl_rpc_MainNetS1)

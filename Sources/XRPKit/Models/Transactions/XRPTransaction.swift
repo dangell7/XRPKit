@@ -28,11 +28,10 @@ public class XRPTransaction: XRPRawTransaction {
     func autofill() -> EventLoopFuture<XRPTransaction> {
         
         let promise = eventGroup.next().makePromise(of: XRPTransaction.self)
-        let ledger = XRPLedger()
 
         // network calls to retrive current account and ledger info
         _ = ledger.currentLedgerInfo().map { (ledgerInfo) in
-            _ = ledger.getAccountInfo(account: self.wallet.address).map { (accountInfo) in
+            _ = self.ledger.getAccountInfo(account: self.wallet.address).map { (accountInfo) in
                 // dictionary containing transaction fields
                 let filledFields: [String:Any] = [
                     "LastLedgerSequence" : ledgerInfo.index+5,
