@@ -12,7 +12,7 @@ enum LedgerError: Error {
     case runtimeError(String)
 }
 
-public struct XRPLedger {
+public class XRPLedger: NSObject {
     
     // WebSocket is always available through SPM
     // WebSocket is only available through CocoaPods on newer OS
@@ -24,17 +24,17 @@ public struct XRPLedger {
     #endif
     
     // JSON-RPC
-    private static var url: URL = .xrpl_rpc_MainNetS1
+    public var url: URL = .xrpl_rpc_Testnet
     
-    private init() {
-        
+    required public convenience override init() {
+        self.init(endpoint: .xrpl_rpc_MainNetS1)
     }
     
-    public static func setURL(endpoint: URL) {
+    public init(endpoint: URL) {
         self.url = endpoint
     }
     
-    public static func getTxs(account: String) -> EventLoopFuture<[XRPHistoricalTransaction]> {
+    public func getTxs(account: String) -> EventLoopFuture<[XRPHistoricalTransaction]> {
         
         let promise = eventGroup.next().makePromise(of: [XRPHistoricalTransaction].self)
         
@@ -91,7 +91,7 @@ public struct XRPLedger {
         
     }
     
-    public static func getBalance(address: String) -> EventLoopFuture<XRPAmount> {
+    public func getBalance(address: String) -> EventLoopFuture<XRPAmount> {
         
         let promise = eventGroup.next().makePromise(of: XRPAmount.self)
         
@@ -124,7 +124,7 @@ public struct XRPLedger {
         return promise.futureResult
     }
     
-    public static func getAccountInfo(account: String) -> EventLoopFuture<XRPAccountInfo> {
+    public func getAccountInfo(account: String) -> EventLoopFuture<XRPAccountInfo> {
         let promise = eventGroup.next().makePromise(of: XRPAccountInfo.self)
         let parameters: [String: Any] = [
             "method" : "account_info",
@@ -159,7 +159,7 @@ public struct XRPLedger {
         return promise.futureResult
     }
     
-    public static func getSignerList(address: String) -> EventLoopFuture<NSDictionary> {
+    public func getSignerList(address: String) -> EventLoopFuture<NSDictionary> {
         
         let promise = eventGroup.next().makePromise(of: NSDictionary.self)
         
@@ -192,7 +192,7 @@ public struct XRPLedger {
         
     }
     
-    public static func getPendingEscrows(address: String) -> EventLoopFuture<NSDictionary> {
+    public func getPendingEscrows(address: String) -> EventLoopFuture<NSDictionary> {
         
         let promise = eventGroup.next().makePromise(of: NSDictionary.self)
         
@@ -225,7 +225,7 @@ public struct XRPLedger {
         
     }
     
-    public static func currentLedgerInfo() -> EventLoopFuture<XRPCurrentLedgerInfo> {
+    public func currentLedgerInfo() -> EventLoopFuture<XRPCurrentLedgerInfo> {
         let promise = eventGroup.next().makePromise(of: XRPCurrentLedgerInfo.self)
         let parameters: [String: Any] = [
             "method" : "fee"
@@ -245,7 +245,7 @@ public struct XRPLedger {
         return promise.futureResult
     }
     
-    public static func submit(txBlob: String) -> EventLoopFuture<NSDictionary> {
+    public func submit(txBlob: String) -> EventLoopFuture<NSDictionary> {
         let promise = eventGroup.next().makePromise(of: NSDictionary.self)
         let parameters: [String: Any] = [
             "method" : "submit",

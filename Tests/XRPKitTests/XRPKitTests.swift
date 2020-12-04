@@ -3,6 +3,8 @@ import XCTest
 
 final class XRPKitTests: XCTestCase {
     
+    var xrpLedger: XRPLedger = XRPLedger(endpoint: .xrpl_rpc_Testnet)
+    
     static var allTests = [
         ("testWS", testWS),
         ("testFundWallet", testFundWallet),
@@ -155,7 +157,7 @@ final class XRPKitTests: XCTestCase {
     func testGetSignerList() {
         let exp = expectation(description: "Loading stories")
         let wallet = try! XRPSeedWallet(seed: "ssJip5pqECDQuG5tdSehaKicmkN4d")
-        XRPLedger.getSignerList(address: wallet.address).map { (dict) in
+        xrpLedger.getSignerList(address: wallet.address).map { (dict) in
             print(dict)
             exp.fulfill()
         }
@@ -259,7 +261,7 @@ final class XRPKitTests: XCTestCase {
         let exp = expectation(description: "Testing \(#function)")
 
         let wallet = try! XRPSeedWallet(seed: "sEdVLSxBzx6Xi9XTqYj6a88epDSETKR")
-        _ = XRPLedger.getPendingEscrows(address: wallet.address).map { (dict) in
+        _ = xrpLedger.getPendingEscrows(address: wallet.address).map { (dict) in
             print(dict)
             exp.fulfill()
         }
@@ -270,7 +272,7 @@ final class XRPKitTests: XCTestCase {
         let exp = expectation(description: "Testing \(#function)")
         
         let wallet = try! XRPSeedWallet(seed: "sEdVLSxBzx6Xi9XTqYj6a88epDSETKR")
-        _ = XRPLedger.getTxs(account: wallet.address).map { (txs) in
+        _ = xrpLedger.getTxs(account: wallet.address).map { (txs) in
             exp.fulfill()
         }
         
@@ -518,7 +520,7 @@ final class XRPKitTests: XCTestCase {
         
         // call my asynchronous method
         let wallet = try! XRPSeedWallet(seed: "ssExhwra2PtqmPWYQvDyHTkycsdGn")
-        _ = XRPLedger.getTxs(account: wallet.address).map { (transactions) in
+        _ = xrpLedger.getTxs(account: wallet.address).map { (transactions) in
             print(transactions)
             exp.fulfill()
         }
@@ -533,7 +535,7 @@ final class XRPKitTests: XCTestCase {
         
         // call my asynchronous method
         let wallet = try! XRPSeedWallet(seed: "sEdVLSxBzx6Xi9XTqYj6a88epDSETKR")
-        _ = XRPLedger.getAccountInfo(account: wallet.address).map { (info) in
+        _ = xrpLedger.getAccountInfo(account: wallet.address).map { (info) in
             print(info)
             exp.fulfill()
         }
@@ -638,7 +640,7 @@ final class XRPKitTests: XCTestCase {
         
         // call my asynchronous method
         let wallet = try! XRPSeedWallet(seed: "ssExhwra2PtqmPWYQvDyHTkycsdGn")
-        _ = XRPLedger.getBalance(address: wallet.address).map { (result) in
+        _ = xrpLedger.getBalance(address: wallet.address).map { (result) in
             print(result)
             exp.fulfill()
         }
@@ -919,7 +921,7 @@ final class XRPKitTests: XCTestCase {
         // ================================================================================================
         // Ledger Info -> Check balance
         // ================================================================================================
-        _ = XRPLedger.getBalance(address: "rPdCDje24q4EckPNMQ2fmUAMDoGCCu3eGK").map { (amount) in
+        _ = xrpLedger.getBalance(address: "rPdCDje24q4EckPNMQ2fmUAMDoGCCu3eGK").map { (amount) in
             print(amount.prettyPrinted()) // 1,800.000000
         }
         
