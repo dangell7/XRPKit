@@ -43,7 +43,14 @@ public struct XRPAmount {
             throw XRPAmountError.invalidAmount
         }
         self.drops = _drops
-
+    }
+    
+    public init(xrp: Double) throws {
+        let _drops = Int(xrp*1000000)
+        if _drops < 0 || _drops > UInt64(100000000000000000) {
+            throw XRPAmountError.invalidAmount
+        }
+        self.drops = _drops
     }
     
     public func prettyPrinted() -> String {
@@ -61,9 +68,7 @@ public struct XRPAmount {
     }
     
     public func toXrp() -> Double {
-        let drops = self.drops%1000000
         let xrp = self.drops/1000000
-        return Double("\(xrp).\(drops)") ?? 0.0
+        return Double(xrp)
     }
-
 }

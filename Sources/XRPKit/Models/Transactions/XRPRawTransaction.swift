@@ -21,6 +21,15 @@ public class XRPRawTransaction {
         self.fields = enforceJSONTypes(fields: fields)
     }
     
+    public func addFields(sequence: Int, fee: XRPAmount, ledgerIndex: Int) {
+        let filledFields: [String: Any] = [
+            "LastLedgerSequence": ledgerIndex,
+            "Fee": "\(fee.drops!)",
+            "Sequence": sequence,
+        ]
+        self.fields = self.fields.merging(self.enforceJSONTypes(fields: filledFields)) { (_, new) in new }
+    }
+    
     public func sign(wallet: XRPWallet) throws -> XRPRawTransaction {
         
         // make sure all fields are compatible

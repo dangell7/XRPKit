@@ -110,3 +110,11 @@ internal struct PrivateKey {
         )
     }
 }
+
+private extension Data {
+    mutating func getPointer() -> UnsafeMutablePointer<UInt8> {
+        return self.withUnsafeMutableBytes { (bytePtr) in
+            bytePtr.bindMemory(to: UInt8.self).baseAddress!
+        }
+    }
+}

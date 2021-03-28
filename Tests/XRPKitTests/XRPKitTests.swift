@@ -345,6 +345,41 @@ final class XRPKitTests: XCTestCase {
         }
     }
     
+    // Test Message Sign
+    func testSign() {
+        let messageData = "{\"dob\": \"01/01/2020\"}".data(using: .utf8)!
+        guard let fromWallet = try? XRPSeedWallet(seed: "snYP7oArxKepd3GPDcrjMsJYiJeJB") else {
+            XCTFail("Could not generate xrp wallet")
+            return
+        }
+        let messageSignature = try fromWallet.sign(
+            message: messageData.bytes
+        )
+        XCTAssert(messageSignature.toHexString() == "3044022037a359ba0c27345ff0e547beb259805acaa1353ce0d5b2337096b0818f74a8aa022066db37e8a1edef037913432ef1897ec115b8b98ef480e6258c9c663785b2a4ef"
+        )
+    }
+    
+    // Test Message Sign & Verify
+    func testSignAndVerifyMessage() {
+        let messageData = "{\"dob\": \"01/01/2020\"}".data(using: .utf8)!
+        guard let fromWallet = try? XRPSeedWallet(seed: "snYP7oArxKepd3GPDcrjMsJYiJeJB") else {
+            XCTFail("Could not generate xrp wallet")
+            return
+        }
+        do {
+            let messageSignature = try fromWallet.sign(
+                message: messageData.bytes
+            )
+            let valid = try XRPSeedWallet.verify(
+                signature: messageSignature,
+                message: messageData.bytes,
+                publicKey: fromWallet.publicKey)
+            XCTAssert(valid == true)
+        } catch {
+            XCTFail("Could not generate wallet")
+        }
+    }
+    
     func testSecp256k1DerivationPath() {
         let tests = [
             [

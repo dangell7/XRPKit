@@ -46,7 +46,6 @@ extension XRPWallet {
         let accountID = RIPEMD160.hash(message: Data(hex: self.publicKey).sha256())
         return [UInt8](accountID)
     }
-    
     /// Derive a standard XRP address from a public key.
     ///
     /// - Parameter publicKey: hexadecimal public key
@@ -196,7 +195,9 @@ public class XRPSeedWallet: XRPWallet {
     /// - Parameter seed: amily seed using XRP alphabet and standard format.
     /// - Throws: SeedError
     public convenience init(seed: String) throws {
-        let bytes = try XRPSeedWallet.decodeSeed(seed: seed)!
+        guard let bytes = try XRPSeedWallet.decodeSeed(seed: seed) else {
+            throw SeedError.invalidSeed
+        }
         let entropy = Entropy(bytes: bytes)
         let type = seed.prefix(3) == "sEd" ? SeedType.ed25519 : SeedType.secp256k1
         self.init(entropy: entropy, type: type)
@@ -274,6 +275,26 @@ public class XRPSeedWallet: XRPWallet {
             return try XRPSeedWallet.encodeSeed(entropy: entropy, type: .secp256k1)
         } catch {
             return nil
+        }
+    }
+    
+    public func sign(message: [UInt8]) -> [UInt8] {
+        do {
+            let privateKey = [UInt8](Data(hex: self.privateKey))
+            return try SECP256K1.sign(message: message, privateKey: privateKey)
+        } catch {
+            print(error.localizedDescription)
+            return []
+        }
+    }
+    
+    public static func verify(signature: [UInt8], message: [UInt8], publicKey: String) -> Bool {
+        do {
+            let pubKey = [UInt8](Data(hex: publicKey))
+            return try SECP256K1.verify(signature: signature, message: message, publicKey: pubKey)
+        } catch {
+            print(error.localizedDescription)
+            return false
         }
     }
 }

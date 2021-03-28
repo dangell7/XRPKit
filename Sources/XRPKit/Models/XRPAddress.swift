@@ -61,6 +61,10 @@ public struct XRPAddress {
         }
     }
     
+    public func address() -> String {
+        return self.rAddress
+    }
+    
     public static func decodeXAddress(xAddress: String) throws -> XRPAddress {
         return try self.init(xAddress: xAddress)
     }
